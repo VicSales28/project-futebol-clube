@@ -24,13 +24,12 @@ Team.init({
   teamName: {
     type: DataTypes.STRING(100),
     allowNull: false,
-  }
+  },
 }, {
   sequelize: db,
   modelName: 'teams',
   timestamps: false,
   underscored: true,
 });
-
 
 export default Team;
