@@ -13,6 +13,18 @@ class TeamService {
     const modelResponse = await this.teamModel.findAll();
     return { status: 'SUCCESSFUL', data: modelResponse };
   }
+
+  public async findById(id: number): Promise<ServiceResponse<ITeam>> {
+    // Buscando a equipe pelo ID usando o método teamModel.findById
+    const modelResponse = await this.teamModel.findById(id);
+    // Verificando se a equipe foi encontrada
+    if (!modelResponse) {
+      // Se não encontrada, retornando uma resposta com status 'NOT_FOUND' e mensagem de erro
+      return { status: 'NOT_FOUND', data: { message: 'Team not found' } };
+    }
+    // Se a equipe foi encontrada, retornando uma resposta com status 'SUCCESSFUL' e os dados da equipe
+    return { status: 'SUCCESSFUL', data: modelResponse };
+  }
 }
 
 export default TeamService;

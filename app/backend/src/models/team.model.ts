@@ -15,6 +15,23 @@ class TeamModel implements ITeamModel {
     ));
     // Mapeia os resultados da busca para um novo array contendo apenas as propriedades id e teamName de cada equipe
   }
+
+  async findById(id: ITeam['id']): Promise<ITeam | null> {
+    // Recebe um parâmetro id do tipo ITeam['id']
+    // Retorna uma Promessa que será resolvida com um objeto do tipo ITeam ou null
+    const teamFound = await this.model.findByPk(id);
+    // Aguarda a conclusão da busca do time usando o método "Find By Primary Key" da propriedade model
+    if (teamFound == null) {
+      return null;
+    }
+    // Esta linha verifica se não foi encontrada uma equipe com o ID fornecido
+    const team: ITeam = {
+      id: teamFound.id,
+      teamName: teamFound.teamName,
+    };
+    // Cria um objeto team para armazenar as propriedades da equipe (id e teamName)
+    return team;
+  }
 }
 
 export default TeamModel;
