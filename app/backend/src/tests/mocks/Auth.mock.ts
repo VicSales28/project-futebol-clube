@@ -39,3 +39,8 @@ export const unregisteredPasswordCredentials = {
   password: 'unregistered'
 }
 
+export const adminUserData = { 
+  role: 'admin', 
+  id: 1, 
+  username: 'Admin' 
+}

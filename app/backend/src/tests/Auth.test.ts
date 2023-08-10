@@ -7,6 +7,7 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import UserModel from '../database/models/UserModel';
 import {
+  adminUserData,
   invalidEmailCredentials,
   invalidPasswordCredentials,
   noEmailCrendentials,
@@ -16,6 +17,7 @@ import {
   validUser,
   validUserCredentials,
 } from './mocks/Auth.mock';
+import JWTUtility from '../utils/JWTUtility';
 
 chai.use(chaiHttp);
 
@@ -75,5 +77,29 @@ describe('Testes envolvendo login de acesso', () => {
 
     expect(response).to.have.status(401);
     expect(response.body).to.deep.equal({ message: 'Invalid email or password' });
+  });
+});
+
+describe('Testes envolvendo o endpoint GET /login/role', () => {
+  afterEach(sinon.restore);
+  it('Testa rota protegida', async function () {
+    sinon.stub(JWTUtility.prototype, 'verify').returns(adminUserData);
+
+    const response = await chai.request(app).get('/login/role').set('Authorization', 'valid-token');
+    expect(response).to.have.status(200);
+    expect(response.body).to.be.have.property('role', 'admin');
+  });
+
+  it('Testa quando o token não é encontrado', async function () {
+    const response = await chai.request(app).get('/login/role');
+    expect(response).to.have.status(401);
+    expect(response.body).to.be.have.property('message', 'Token not found');
+  });
+
+  it('Testa quando o token não é válido', async function () {
+    sinon.stub(JWTUtility.prototype, 'verify').throws();
+    const response = await chai.request(app).get('/login/role').set('Authorization', 'invalid-token');
+    expect(response).to.have.status(401);
+    expect(response.body).to.be.have.property('message', 'Token must be a valid token');
   });
 });
