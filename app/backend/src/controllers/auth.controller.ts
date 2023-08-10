@@ -15,6 +15,9 @@ class AuthController {
 
     return res.status(200).json({ token });
   }
+
+  getUserRole = async (_req: Request, res: Response) =>
+    res.status(200).json({ role: res.locals.user.role });
 }
 
 export default AuthController;
