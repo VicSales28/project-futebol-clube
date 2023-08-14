@@ -13,20 +13,6 @@ class TeamService {
     return { status: 'SUCCESSFUL', data: allMatches };
   }
 
-  // public async markMatchAsFinished(matchId: string | number):
-  // Promise<ServiceResponse<{ message: string }>> {
-  //   try {
-  //     await this.matchModel.markMatchAsFinished(matchId);
-
-  //     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
-  //   } catch (error) {
-  //     return {
-  //       status: 'CONFLICT',
-  //       data: { message: `Failed to mark match ${matchId} as finished` },
-  //     };
-  //   }
-  // }
-
   public async markMatchAsFinished(id: number):
   Promise<ServiceResponse<{ message: string }>> {
     const match = await this.matchModel.findById(Number(id));
@@ -42,6 +28,26 @@ class TeamService {
     }
 
     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
+  }
+
+  public async modifyMatchInProg(id: number, data: IMatch):
+  Promise<ServiceResponse<{ message: string }>> {
+    const matchFound = await this.matchModel.findById(id);
+
+    if (!matchFound) {
+      return { status: 'NOT_FOUND', data: { message: `Match ${id} was not located` } };
+    }
+
+    if (!matchFound.inProgress) {
+      return {
+        status: 'UNAUTHORIZED',
+        data: { message: 'Updates are only allowed for matches in progress' },
+      };
+    }
+
+    await this.matchModel.modifyMatchInProg(id, data);
+
+    return { status: 'SUCCESSFUL', data: { message: 'Match successfully updated' } };
   }
 }
 

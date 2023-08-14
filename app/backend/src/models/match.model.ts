@@ -2,6 +2,7 @@ import { IMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import TeamModel from '../database/models/TeamModel';
 import Model from '../database/models/MatchModel';
+import { ExcludingId } from '../Interfaces/types/ExcludingId';
 
 class MatchModel implements IMatchModel {
   private model = Model;
@@ -102,6 +103,30 @@ Finaliza uma partida pelo seu ID, atualizando seu status para "finalizada".
 
     // Retorna as informações da partida que foi finalizada.
     return matchToFinish;
+  }
+
+  /**
+
+Atualiza uma entidade pelo ID, excluindo a propriedade 'id' do novo objeto de informações.
+@param id - O ID da entidade a ser atualizada.
+@param newInfo - As novas informações da entidade, excluindo a propriedade 'id'.
+@returns Uma Promise que resolve para a entidade atualizada ou null se a atualização falhar.
+*/
+  async modifyMatchInProg(id: number, newInfo: Partial<ExcludingId<IMatch>>)
+    : Promise<IMatch | null> {
+  // Atualiza a entidade no banco de dados.
+    const [affectedRows] = await this.model.update(newInfo, { where: { id } });
+
+    // Verifica se a atualização teve êxito.
+    if (affectedRows === 0) {
+      return null; // A atualização não teve êxito, retorna null.
+    }
+
+    // Exibe uma mensagem para indicar que a atualização foi feita.
+    console.log('Atualização feita');
+
+    // Retorna a entidade atualizada.
+    return this.findById(id);
   }
 }
 

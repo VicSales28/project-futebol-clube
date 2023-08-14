@@ -8,6 +8,8 @@ export default function mapStatusHTTP(status: string): number {
       return 404;
     case 'CONFLICT':
       return 409;
+    case 'UNAUTHORIZED':
+      return 401;
     default:
       return 500;
   }
