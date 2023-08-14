@@ -16,54 +16,51 @@ const { expect } = chai;
 describe('Testes envolvendo as partidas', () => {
   afterEach(sinon.restore);
 
-  // it('Testa GET /matches para retornar todos as partidas', async function () {
-  //   const builtMatches = MatchModel.build(sampleMatches as any);
-  //   sinon.stub(MatchModel, 'findAll').resolves(builtMatches as any);
+  it('Testa GET /matches para retornar todos as partidas', async function () {
+    const builtMatches = MatchModel.build(sampleMatches as any);
+    sinon.stub(MatchModel, 'findAll').resolves(builtMatches as any);
 
-  //   const { status, body } = await chai.request(app).get('/matches');
+    const { status, body } = await chai.request(app).get('/matches');
 
-  //   expect(status).to.equal(200);
-  //   expect(body).to.deep.equal(sampleMatches);
-  // });
+    expect(status).to.equal(200);
+    expect(body).to.deep.equal(sampleMatches);
+  });
 
-  it('deve retornar finalizar uma partida pelo id', async function() {
+  it('Testa a rota segura PATCH /matches/:id/finish', async function() {
     sinon.stub(MatchModel, 'update').resolves([1] as any);
     sinon.stub(MatchModel, 'findByPk').resolves(matchInProg as any);
     sinon.stub(JWTUtility.prototype, 'verify').returns(validUser);
 
-
     const { status, body } = await chai.request(app)
-    .patch('/matches/48/finish')
+    .patch('/matches/41/finish')
     .set('Authorization', 'token');
 
     expect(status).to.equal(200);
     expect(body.message).to.deep.equal('Finished');
   });
 
-  it('não deve encontrar um id valido para atualizar', async function() {
+  it('Testa PATCH /matches/:id/finish quando o id não é encontrado', async function() {
     sinon.stub(MatchModel, 'findByPk').resolves(null);
     sinon.stub(JWTUtility.prototype, 'verify').returns(validUser);
 
-
     const { status, body } = await chai.request(app)
-    .patch('/matches/0/finish')
+    .patch('/matches/999/finish')
     .set('Authorization', 'token');
 
     expect(status).to.equal(404);
-    expect(body.message).to.deep.equal('Match 0 was not located');
+    expect(body.message).to.deep.equal('Match 999 was not located');
   });
 
-  it('deve dar conflito de update para finalizar uma partida', async function() {
+  it('Testa PATCH /matches/:id/finish quando o id já está atualizado', async function() {
     sinon.stub(MatchModel, 'update').resolves([0] as any);
     sinon.stub(MatchModel, 'findByPk').resolves(matchInProg as any);
     sinon.stub(JWTUtility.prototype, 'verify').returns(validUser);
 
-
     const { status, body } = await chai.request(app)
-    .patch('/matches/3/finish')
+    .patch('/matches/5/finish')
     .set('Authorization', 'token');
 
     expect(status).to.equal(409);
-    expect(body.message).to.deep.equal('Match 3 is already in its final state');
+    expect(body.message).to.deep.equal('Match 5 is already in its final state');
   });
 });
