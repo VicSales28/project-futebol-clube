@@ -55,3 +55,12 @@ export const matchInProg = {
     teamName: 'Internacional'
   }
 }
+
+export const matchFinished = {
+  id: 5,
+  homeTeamId: 7,
+  homeTeamGoals: 1,
+  awayTeamId: 10,
+  awayTeamGoals: 1,
+  inProgress: false,
+}

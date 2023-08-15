@@ -1,38 +1,27 @@
 import { NextFunction, Request, Response } from 'express';
 import JWTUtility from '../utils/JWTUtility';
+import getAccessToken from '../utils/getAcessToken';
 
 class TokenMiddleware {
-  // Função auxiliar para obter o token sem o prefixo "Bearer"
-  private static getAccessToken = (tokenWithBearer: string) => {
-    const splitted = tokenWithBearer.split(' ');
-    return splitted[splitted.length - 1];
-  };
-
-  static checkToken = (req: Request, res: Response, next: NextFunction) => {
+  static checkToken(req: Request, res: Response, next: NextFunction): Response | void {
     try {
       const tokenWithBearer = req.header('authorization');
-
-      console.log(tokenWithBearer);
 
       if (!tokenWithBearer) {
         return res.status(401).json({ message: 'Token not found' });
       }
 
-      const JWT = new JWTUtility();
+      const token = getAccessToken(tokenWithBearer);
 
-      const token = TokenMiddleware.getAccessToken(tokenWithBearer);
+      const verification = JWTUtility.verify(token);
 
-      const verified = JWT.verify(token);
-
-      res.locals.user = verified;
-
-      console.log(verified);
+      console.log(verification);
 
       next();
     } catch (error) {
       return res.status(401).json({ message: 'Token must be a valid token' });
     }
-  };
+  }
 }
 
 export default TokenMiddleware;

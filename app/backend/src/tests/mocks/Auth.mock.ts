@@ -3,7 +3,7 @@ export const validUser = {
   username: 'Admin',
   role: 'admin',
   email: 'admin@admin.com',
-  password: 'password',
+  password: 'secret_admin',
 }
 
 export const validUserCredentials = {
@@ -44,3 +44,5 @@ export const adminUserData = {
   id: 1, 
   username: 'Admin' 
 }
+
+export const adminToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluIiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE2OTIwNDg5NzB9.2GA1sqh8lQ3ohwb0_pr26IV-LO6vwc2aXwhhbmA8fUQ';
