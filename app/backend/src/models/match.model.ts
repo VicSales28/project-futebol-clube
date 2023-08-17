@@ -128,6 +128,19 @@ Atualiza uma entidade pelo ID, excluindo a propriedade 'id' do novo objeto de in
     // Retorna a entidade atualizada.
     return this.findById(id);
   }
+
+  /**
+  Cria um novo objeto de partida (match) com os dados fornecidos.
+  @param newMatch - Os dados necessários para criar a partida.
+  @returns Uma promessa que resolve com o objeto de partida recém-criado.
+  */
+  async create(newMatch: ExcludingId<IMatch>): Promise<IMatch> {
+    // Cria um novo objeto de partida com os dados fornecidos e define o status como 'inProgress: true'.
+    const matchCreated = await this.model.create({ ...newMatch, inProgress: true });
+
+    // Retorna o novo objeto de partida criado.
+    return matchCreated;
+  }
 }
 
 // Funções findAll e findByQuery desenvolvidas com ajuda de colegas (Req.16)

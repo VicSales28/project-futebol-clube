@@ -1,10 +1,13 @@
 import MatchModel from '../models/match.model';
 import { IMatch } from '../Interfaces/matches/IMatch';
 import { ServiceResponse } from '../Interfaces/types/ServiceResponse';
+import { ExcludingId } from '../Interfaces/types/ExcludingId';
+import TeamsModel from '../models/team.model';
 
 class TeamService {
   constructor(
     private matchModel = new MatchModel(),
+    private teamsModel = new TeamsModel(),
   ) {}
 
   public async findAll(filter: string | undefined): Promise<ServiceResponse<IMatch[]>> {
@@ -48,6 +51,30 @@ class TeamService {
     await this.matchModel.modifyMatchInProg(id, data);
 
     return { status: 'SUCCESSFUL', data: { message: 'Match successfully updated' } };
+  }
+
+  public async create(newMatch: ExcludingId<IMatch>): Promise<ServiceResponse<IMatch>> {
+    const { awayTeamId, homeTeamId } = newMatch;
+
+    if (awayTeamId === homeTeamId) {
+      return {
+        status: 'UNPROCESSABLE_CONTENT',
+        data: { message: 'It is not possible to create a match with two equal teams' },
+      };
+    }
+
+    const findHomeTeam = await this.teamsModel.findById(homeTeamId);
+    const findAwayTeam = await this.teamsModel.findById(awayTeamId);
+
+    if (!findHomeTeam || !findAwayTeam) {
+      return {
+        status: 'NOT_FOUND',
+        data: { message: 'There is no team with such id!' },
+      };
+    }
+    const matchCreated = await this.matchModel.create(newMatch);
+
+    return { status: 'SUCCESSFUL', data: matchCreated };
   }
 }
 

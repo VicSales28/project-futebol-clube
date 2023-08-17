@@ -20,4 +20,10 @@ router.patch(
   (req: Request, res: Response) => matchController.markMatchAsFinished(req, res),
 );
 
+router.post(
+  '/',
+  TokenMiddleware.checkToken,
+  (req: Request, res: Response) => matchController.create(req, res),
+);
+
 export default router;

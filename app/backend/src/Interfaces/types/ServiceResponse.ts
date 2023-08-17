@@ -1,4 +1,9 @@
-export type ServiceResponseErrorType = 'UNAUTHORIZED' | 'NOT_FOUND' | 'INVALID_DATA' | 'CONFLICT';
+export type ServiceResponseErrorType =
+'UNAUTHORIZED' |
+'NOT_FOUND' |
+'INVALID_DATA' |
+'CONFLICT' |
+'UNPROCESSABLE_CONTENT';
 
 export type ServiceResponseError = {
   status: ServiceResponseErrorType;
