@@ -4,7 +4,7 @@ import { ServiceResponse } from '../Interfaces/types/ServiceResponse';
 import { ExcludingId } from '../Interfaces/types/ExcludingId';
 import TeamsModel from '../models/team.model';
 
-class TeamService {
+class MatchService {
   constructor(
     private matchModel = new MatchModel(),
     private teamsModel = new TeamsModel(),
@@ -78,4 +78,4 @@ class TeamService {
   }
 }
 
-export default TeamService;
+export default MatchService;
