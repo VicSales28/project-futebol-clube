@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import { homeLeaderboard } from './mocks/Leaderboard.mock';
+import { homeLeaderboard, awayLeaderboard } from './mocks/Leaderboard.mock';
 
 chai.use(chaiHttp);
 
@@ -18,5 +18,12 @@ describe('Testa rota GET /leaderboard/home', () => {
 
     expect(status).to.equal(200);
     expect(body).to.deep.equal(homeLeaderboard);
+  });
+
+  it('Testa retorno com as informações do desempenho dos times visitantes', async () => {
+    const { status, body } = await chai.request(app).get('/leaderboard/away');
+
+    expect(status).to.equal(200);
+    expect(body).to.deep.equal(awayLeaderboard);
   });
 });
