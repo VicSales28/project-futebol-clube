@@ -36,6 +36,28 @@ class LeaderboardService {
     // Ordenar os resultados da classificação de acordo com os critérios definidos
     return orderResults(leaderBoardResults);
   }
+
+  async getRankAway(): Promise<ILeaderBoard[]> {
+    const teams = await this.modelTeams.findAll();
+
+    const completedMatches = await this.modelMatches.findAll({ where: { inProgress: false } });
+
+    const leaderBoardResults: ILeaderBoard[] = [];
+
+    teams.forEach((team) => {
+      const awayMatches = completedMatches.filter((match) => match.awayTeamId === team.id);
+
+      const teamLeaderBoard = getLeaderboardResults(
+        team.teamName,
+        awayMatches,
+        ['awayTeamGoals', 'homeTeamGoals'],
+      );
+
+      leaderBoardResults.push(teamLeaderBoard);
+    });
+
+    return orderResults(leaderBoardResults);
+  }
 }
 
 export default LeaderboardService;
