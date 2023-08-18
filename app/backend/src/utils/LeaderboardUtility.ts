@@ -1,4 +1,4 @@
-// import ILeaderBoard from '../Interfaces/leaderboard/ILeaderBoard';
+import ILeaderBoard from '../Interfaces/leaderboard/ILeaderBoard';
 import MatchesModel from '../database/models/MatchModel';
 
 // A definição de tipos TypeGoals é utilizada para indicar e distinguir entre os dois tipos de gols: gols a favor do time (homeTeamGoals) e gols sofridos pelo time, marcado pelo adversário (awayTeamGoals)
@@ -78,3 +78,29 @@ export const getLeaderboardResults = (
   goalsBalance: calculateGoalsDifference(matches, goals),
   efficiency: calculateEfficiency(matches, goals),
 });
+
+export const orderResults = (teams: ILeaderBoard[]) =>
+  teams.sort((a, b) => {
+    // 1. Ordenar por Total de Pontos (decrescente)
+    if (b.totalPoints !== a.totalPoints) {
+      return b.totalPoints - a.totalPoints;
+    }
+
+    // 2. Se Total de Pontos for igual, ordenar por Total de Vitórias (decrescente)
+    if (a.totalVictories !== b.totalVictories) {
+      return b.totalVictories - a.totalVictories;
+    }
+
+    // 3. Se Total de Pontos e Total de Vitórias forem iguais, ordenar por Saldo de Gols (decrescente)
+    if (a.goalsBalance !== b.goalsBalance) {
+      return b.goalsBalance - a.goalsBalance;
+    }
+
+    // 4. Se Total de Pontos, Total de Vitórias e Saldo de Gols forem iguais, ordenar por Gols a Favor (decrescente)
+    if (a.goalsFavor !== b.goalsFavor) {
+      return b.goalsFavor - a.goalsFavor;
+    }
+
+    // 5. Se todas as condições acima forem iguais, ordenar por Gols Próprios (crescente)
+    return a.goalsOwn - b.goalsOwn;
+  });

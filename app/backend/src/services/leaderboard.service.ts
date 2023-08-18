@@ -1,4 +1,4 @@
-import { getLeaderboardResults } from '../utils/LeaderboardUtility';
+import { getLeaderboardResults, orderResults } from '../utils/LeaderboardUtility';
 import TeamModel from '../database/models/TeamModel';
 import MatchesModel from '../database/models/MatchModel';
 import ILeaderBoard from '../Interfaces/leaderboard/ILeaderBoard';
@@ -34,7 +34,7 @@ class LeaderboardService {
     });
 
     // Ordenar os resultados da classificação de acordo com os critérios definidos
-    return leaderBoardResults;
+    return orderResults(leaderBoardResults);
   }
 }
 
