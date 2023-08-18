@@ -15,6 +15,9 @@ class LeaderboardController {
 
     return res.status(200).json(serviceResponse);
   }
+
+  getRankAll = (_req: Request, res: Response) => res
+    .status(501).json({ error: 'This search has not been implemented yet' });
 }
 
 export default LeaderboardController;

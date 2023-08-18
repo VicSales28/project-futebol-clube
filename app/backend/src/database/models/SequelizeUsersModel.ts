@@ -7,8 +7,8 @@ import {
 } from 'sequelize';
 import db from '.';
 
-class User extends Model<InferAttributes<User>,
-InferCreationAttributes<User>> {
+class SequelizeUsersModel extends Model<InferAttributes<SequelizeUsersModel>,
+InferCreationAttributes<SequelizeUsersModel>> {
   declare id: CreationOptional<number>;
 
   declare username: string;
@@ -20,7 +20,7 @@ InferCreationAttributes<User>> {
   declare password: string;
 }
 
-User.init({
+SequelizeUsersModel.init({
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -49,4 +49,4 @@ User.init({
   timestamps: false,
 });
 
-export default User;
+export default SequelizeUsersModel;

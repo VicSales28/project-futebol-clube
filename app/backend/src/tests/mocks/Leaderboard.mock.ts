@@ -26,14 +26,14 @@ export const awayLeaderboard = [
   {
     "name": "Internacional",
     "totalPoints": 6,
-    "totalGames": 3,
+    "totalGames": 2,
     "totalVictories": 2,
     "totalDraws": 0,
-    "totalLosses": 1,
-    "goalsFavor": 4,
-    "goalsOwn": 2,
-    "goalsBalance": 2,
-    "efficiency": "66.67"
+    "totalLosses": 0,
+    "goalsFavor": 3,
+    "goalsOwn": 0,
+    "goalsBalance": 3,
+    "efficiency": "100.00"
   },
   {
     "name": "São José-SP",
@@ -207,18 +207,6 @@ export const homeLeaderboard = [
     "efficiency": "100.00"
   },
   {
-    "name": "Corinthians",
-    "totalPoints": 9,
-    "totalGames": 3,
-    "totalVictories": 3,
-    "totalDraws": 0,
-    "totalLosses": 0,
-    "goalsFavor": 8,
-    "goalsOwn": 2,
-    "goalsBalance": 6,
-    "efficiency": "100.00"
-  },
-  {
     "name": "Palmeiras",
     "totalPoints": 7,
     "totalGames": 3,
@@ -229,6 +217,18 @@ export const homeLeaderboard = [
     "goalsOwn": 5,
     "goalsBalance": 5,
     "efficiency": "77.78"
+  },
+  {
+    "name": "Corinthians",
+    "totalPoints": 6,
+    "totalGames": 2,
+    "totalVictories": 2,
+    "totalDraws": 0,
+    "totalLosses": 0,
+    "goalsFavor": 6,
+    "goalsOwn": 1,
+    "goalsBalance": 5,
+    "efficiency": "100.00"
   },
   {
     "name": "Grêmio",

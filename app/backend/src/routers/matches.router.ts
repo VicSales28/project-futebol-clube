@@ -1,5 +1,5 @@
 import { Request, Router, Response } from 'express';
-import MatchController from '../controllers/match.controller';
+import MatchController from '../controllers/matches.controller';
 import TokenMiddleware from '../middlewares/token.middleware';
 
 const matchController = new MatchController();

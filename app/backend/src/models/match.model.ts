@@ -1,11 +1,11 @@
+import SequelizeMatchesModel from '../database/models/SequelizeMatchesModel';
+import SequelizeTeamsModel from '../database/models/SequelizeTeamsModel';
 import { IMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
-import TeamModel from '../database/models/TeamModel';
-import Model from '../database/models/MatchModel';
 import { ExcludingId } from '../Interfaces/types/ExcludingId';
 
 class MatchModel implements IMatchModel {
-  private model = Model;
+  private model = SequelizeMatchesModel;
 
   /**
 Consulta todas as partidas com base em um filtro.
@@ -47,9 +47,9 @@ Caso seja uma string "true", as partidas em andamento serão filtradas. Caso con
     const matchesFound = await this.model.findAll({
       include: [
         // Incluir informações da equipe da casa, excluindo o atributo 'id'
-        { model: TeamModel, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: SequelizeTeamsModel, as: 'homeTeam', attributes: { exclude: ['id'] } },
         // Incluir informações da equipe visitante, excluindo o atributo 'id'
-        { model: TeamModel, as: 'awayTeam', attributes: { exclude: ['id'] } },
+        { model: SequelizeTeamsModel, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
       where: matchesQueryOptions, // Aplica as opções de consulta
     });
@@ -99,7 +99,6 @@ Finaliza uma partida pelo seu ID, atualizando seu status para "finalizada".
     if (affectedRows === 0) {
       return null; // A atualização não teve êxito, retorna null.
     }
-    console.log('Atualização feita'); // Indica que a atualização foi feita.
 
     // Retorna as informações da partida que foi finalizada.
     return matchToFinish;

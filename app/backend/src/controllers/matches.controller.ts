@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import MatchService from '../services/match.service';
+import MatchService from '../services/matches.service';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
 
 class MatchController {

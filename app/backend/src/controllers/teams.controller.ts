@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import TeamService from '../services/team.service';
+import TeamService from '../services/teams.service';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
 
 // Controlador que lida com as requisições relacionadas a equipes

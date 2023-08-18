@@ -4,8 +4,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import TeamModel from '../database/models/TeamModel';
-
+import TeamModel from '../database/models/SequelizeTeamsModel';
 import { allTeams, firstTeam } from './mocks/Teams.mock';
 
 chai.use(chaiHttp);
@@ -15,30 +14,39 @@ const { expect } = chai;
 describe('Testes envolvendo os times', () => {
   afterEach(sinon.restore);
 
-  it('Testa GET /teams para retornar todos os times', async function () {
+  it('deve retornar todos os times ao acessar GET /teams', async () => {
+    // Arrange
     sinon.stub(TeamModel, 'findAll').resolves(allTeams as any);
 
-    const { status, body } = await chai.request(app).get('/teams');
+    // Act
+    const response = await chai.request(app).get('/teams');
 
-    expect(status).to.equal(200);
-    expect(body).to.deep.equal(allTeams);
+    // Assert
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal(allTeams);
   });
 
-  it('Testa GET /teams/:id para retornar um time específico', async function () {
+  it('deve retornar um time específico ao acessar GET /teams/:id', async () => {
+    // Arrange
     sinon.stub(TeamModel, 'findByPk').resolves(firstTeam as any);
 
-    const { status, body } = await chai.request(app).get('/teams/1');
+    // Act
+    const response = await chai.request(app).get('/teams/1');
 
-    expect(status).to.equal(200);
-    expect(body).to.deep.equal(firstTeam);
+    // Assert
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal(firstTeam);
   });
 
-  it('Testa GET /teams/:id quando o time não for encontrado', async function () {
+  it('deve retornar status 404 e mensagem de erro ao acessar GET /teams/:id para um time não encontrado', async () => {
+    // Arrange
     sinon.stub(TeamModel, 'findByPk').resolves(null);
 
-    const { status, body } = await chai.request(app).get('/teams/50');
+    // Act
+    const response = await chai.request(app).get('/teams/50');
 
-    expect(status).to.equal(404);
-    expect(body.message).to.equal('Team not found');
+    // Assert
+    expect(response.status).to.equal(404);
+    expect(response.body.message).to.equal('Team not found');
   });
 });

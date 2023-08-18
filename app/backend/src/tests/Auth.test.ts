@@ -5,7 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import UserModel from '../database/models/UserModel';
+import UserModel from '../database/models/SequelizeUsersModel';
 import {
   adminToken,
   invalidEmailCredentials,
@@ -26,68 +26,83 @@ const { expect } = chai;
 describe('Testes da rota POST /login', () => {
   afterEach(sinon.restore);
 
-  it('Testa POST /login para acesso com credenciais validas', async function () {
+  it('deve permitir acesso com credenciais válidas', async () => {
+    // Arrange
     sinon.stub(bcrypt, 'compareSync').returns(true);
     sinon.stub(UserModel, 'findOne').resolves(validUser as UserModel);
 
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(validUserCredentials);
 
+    // Assert
     expect(response).to.have.status(200);
     expect(response.body).to.haveOwnProperty('token');
   });
 
-  it('Testa POST /login com email em formado inválido', async function () {
+  it('deve lidar com email inválido', async () => {
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(invalidEmailCredentials);
 
+    // Assert
     expect(response).to.have.status(401);
-    expect(response.body).to.deep.equal({ message: 'Invalid email or password' })
+    expect(response.body).to.deep.equal({ message: 'Invalid email or password' });
   });
 
-  it('Testa POST /login com senha de tamanho insuficiente', async function () {
+  it('deve lidar com senha de tamanho insuficiente', async () => {
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(invalidPasswordCredentials);
 
+    // Assert
     expect(response).to.have.status(401);
     expect(response.body).to.deep.equal({ message: 'Invalid email or password' });
   });
 
-  it('Testa POST /login sem informar email', async function () {
+  it('deve lidar com falta de email', async () => {
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(noEmailCrendentials);
 
+    // Assert
     expect(response).to.have.status(400);
-    expect(response.body).to.deep.equal({ message: 'All fields must be filled' })
+    expect(response.body).to.deep.equal({ message: 'All fields must be filled' });
   });
 
-  it('Testa POST /login sem informar senha', async function () {
+  it('deve lidar com falta de senha', async () => {
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(noPasswordCrendentials);
 
+    // Assert
     expect(response).to.have.status(400);
-    expect(response.body).to.deep.equal({ message: 'All fields must be filled' })
+    expect(response.body).to.deep.equal({ message: 'All fields must be filled' });
   });
 
-  it('Testa POST /login com email em formato válido, mas não cadastrado no banco', async function () {
+  it('deve lidar com email válido, mas não cadastrado', async () => {
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(unregisteredEmailCredentials);
 
+    // Assert
     expect(response).to.have.status(401);
     expect(response.body).to.deep.equal({ message: 'Invalid email or password' });
   });
 
-  it('Testa POST /login com senha com formato válido, mas não cadastrada no banco', async function () {
+  it('deve lidar com senha válida, mas não cadastrada', async () => {
+    // Act
     const response = await chai.request(app)
       .post('/login')
       .send(unregisteredPasswordCredentials);
 
+    // Assert
     expect(response).to.have.status(401);
     expect(response.body).to.deep.equal({ message: 'Invalid email or password' });
   });
@@ -96,31 +111,40 @@ describe('Testes da rota POST /login', () => {
 describe('Testes da rota GET /login/role', () => {
   afterEach(sinon.restore);
 
-  it('Testa caso de sucesso para obter role do administrador', async function () {
+  it('deve obter o papel do administrador com sucesso', async () => {
+    // Arrange
     sinon.stub(JWTUtility, 'verify').returns(adminToken);
 
+    // Act
     const response = await chai.request(app)
       .get('/login/role')
       .set('authorization', adminToken);
 
+    // Assert
     expect(response).to.have.status(200);
-    expect(response.body).to.be.have.property('role', 'admin');
+    expect(response.body).to.have.property('role', 'admin');
   });
 
-  it('Testa quando o token não é encontrado', async function () {
+  it('deve lidar com token não encontrado', async () => {
+    // Act
     const response = await chai.request(app).get('/login/role');
 
+    // Assert
     expect(response).to.have.status(401);
-    expect(response.body).to.be.have.property('message', 'Token not found');
+    expect(response.body).to.have.property('message', 'Token not found');
   });
 
-  it('Testa quando o token não é válido', async function () {
+  it('deve lidar com token inválido', async () => {
+    // Arrange
     sinon.stub(JWTUtility, 'verify').throws();
+
+    // Act
     const response = await chai.request(app)
       .get('/login/role')
       .set('Authorization', 'invalid-token');
 
+    // Assert
     expect(response).to.have.status(401);
-    expect(response.body).to.be.have.property('message', 'Token must be a valid token');
+    expect(response.body).to.have.property('message', 'Token must be a valid token');
   });
 });

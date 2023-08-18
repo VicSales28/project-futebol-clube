@@ -10,20 +10,28 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Testa rota GET /leaderboard/home', () => {
+describe('Rota GET /leaderboard/home', () => {
   afterEach(sinon.restore);
 
-  it('Testa retorno com as informações do desempenho dos times da casa', async () => {
-    const { status, body } = await chai.request(app).get('/leaderboard/home');
+  it('deve retornar informações do desempenho dos times da casa', async () => {
+    // Act
+    const response = await chai.request(app).get('/leaderboard/home');
 
-    expect(status).to.equal(200);
-    expect(body).to.deep.equal(homeLeaderboard);
+    // Assert
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal(homeLeaderboard);
   });
+});
 
-  it('Testa retorno com as informações do desempenho dos times visitantes', async () => {
-    const { status, body } = await chai.request(app).get('/leaderboard/away');
+describe('Rota GET /leaderboard/away', () => {
+  afterEach(sinon.restore);
 
-    expect(status).to.equal(200);
-    expect(body).to.deep.equal(awayLeaderboard);
+  it('deve retornar informações do desempenho dos times visitantes', async () => {
+    // Act
+    const response = await chai.request(app).get('/leaderboard/away');
+
+    // Assert
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal(awayLeaderboard);
   });
 });

@@ -1,5 +1,5 @@
+import SequelizeMatchesModel from '../database/models/SequelizeMatchesModel';
 import ILeaderBoard from '../Interfaces/leaderboard/ILeaderBoard';
-import MatchesModel from '../database/models/MatchModel';
 
 // A definição de tipos TypeGoals é utilizada para indicar e distinguir entre os dois tipos de gols: gols a favor do time (homeTeamGoals) e gols sofridos pelo time, marcado pelo adversário (awayTeamGoals)
 type TypeGoals =
@@ -7,13 +7,19 @@ type TypeGoals =
 'awayTeamGoals';
 
 // Essa função percorre a lista de partidas e, para cada partida, verifica quantos gols foram marcados pelo time. No final, a função retorna o total de gols ao longo de todas as partidas.
-export const countGoals = (matches: MatchesModel[], goals: TypeGoals): number => {
+export const countGoals = (
+  matches: SequelizeMatchesModel[],
+  goals: TypeGoals,
+): number => {
   const totalGoals = matches.reduce((total, currentMatch) => total + currentMatch[goals], 0);
   return totalGoals;
 };
 
 // O objetivo da função calculateMatchResults é determinar quantas vitórias, derrotas e empates ocorreram com base nos gols marcados pelos times em casa (homeTeamGoals) e fora de casa (awayTeamGoals) em cada partida.
-export const calculateMatchesResults = (matches: MatchesModel[], goalsTypes: TypeGoals[]) => {
+export const calculateMatchesResults = (
+  matches: SequelizeMatchesModel[],
+  goalsTypes: TypeGoals[],
+) => {
   let victories = 0;
   let losses = 0;
   let draws = 0;
@@ -35,7 +41,10 @@ export const calculateMatchesResults = (matches: MatchesModel[], goalsTypes: Typ
 };
 
 // O objetivo da função calculateTeamPoints é calcular quantos pontos um time ganhou em todas as partidas.
-export const calculateTeamPoints = (matches: MatchesModel[], goalsTypes: TypeGoals[]): number => {
+export const calculateTeamPoints = (
+  matches: SequelizeMatchesModel[],
+  goalsTypes: TypeGoals[],
+): number => {
   const { victories, draws } = calculateMatchesResults(matches, goalsTypes);
   const totalPoints = (victories * 3) + draws;
   return totalPoints;
@@ -43,7 +52,7 @@ export const calculateTeamPoints = (matches: MatchesModel[], goalsTypes: TypeGoa
 
 // O principal objetivo da função calculateGoalsDifference é calcular a diferença entre os gols marcados e os gols sofridos por um time em um conjunto de partidas de futebol.
 export const calculateGoalsDifference = (
-  matches: MatchesModel[],
+  matches: SequelizeMatchesModel[],
   goalsTypes: TypeGoals[],
 ): number => {
   const goalsScored = countGoals(matches, goalsTypes[0]);
@@ -55,7 +64,10 @@ export const calculateGoalsDifference = (
 };
 
 // O objetivo da função calculateEfficiency é calcular a eficiência de um time em ganhar pontos em todas as partidas de futebol que ele jogou
-export const calculateEfficiency = (matches: MatchesModel[], goals: TypeGoals[]): string => {
+export const calculateEfficiency = (
+  matches: SequelizeMatchesModel[],
+  goals: TypeGoals[],
+): string => {
   const totalPoints = calculateTeamPoints(matches, goals);
   const totalGames = matches.length;
   const efficiency = (totalPoints / (totalGames * 3)) * 100;
@@ -64,7 +76,7 @@ export const calculateEfficiency = (matches: MatchesModel[], goals: TypeGoals[])
 
 export const getLeaderboardResults = (
   teamname: string,
-  matches: MatchesModel[],
+  matches: SequelizeMatchesModel[],
   goals: TypeGoals[],
 ) => ({
   name: teamname,

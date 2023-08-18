@@ -1,14 +1,14 @@
-import { ITeam } from '../Interfaces/teams/ITeam'; // Define estrutura de dados da equipe
-import { ITeamModel } from '../Interfaces/teams/ITeamModel'; // Esta interface possui o método findAll que retorna uma lista de objetos que seguem a estrutura definida em ITeam
-import Model from '../database/models/TeamModel';
+import SequelizeTeamsModel from '../database/models/SequelizeTeamsModel';
+import { ITeam } from '../Interfaces/teams/ITeam';
+import { ITeamModel } from '../Interfaces/teams/ITeamModel';
 
 class TeamModel implements ITeamModel {
-  private model = Model;
+  private sequelizeTeamsModel = SequelizeTeamsModel;
   // Essa propriedade interaje com o banco de dados
 
   async findAll(): Promise<ITeam[]> {
     // Retorna uma Promessa de um array de objetos que seguem à interface ITeam. Este método é responsável por buscar todas as equipes no banco de dados
-    const teamsFound = await this.model.findAll();
+    const teamsFound = await this.sequelizeTeamsModel.findAll();
     // Aguarda a conclusão da busca na propriedade ligada ao banco de dados
     return teamsFound.map(({ id, teamName }) => (
       { id, teamName }
@@ -19,7 +19,7 @@ class TeamModel implements ITeamModel {
   async findById(id: ITeam['id']): Promise<ITeam | null> {
     // Recebe um parâmetro id do tipo ITeam['id']
     // Retorna uma Promessa que será resolvida com um objeto do tipo ITeam ou null
-    const teamFound = await this.model.findByPk(id);
+    const teamFound = await this.sequelizeTeamsModel.findByPk(id);
     // Aguarda a conclusão da busca do time usando o método "Find By Primary Key" da propriedade model
     if (teamFound == null) {
       return null;

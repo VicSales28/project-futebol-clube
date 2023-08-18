@@ -1,18 +1,19 @@
-import { getLeaderboardResults, orderResults } from '../utils/LeaderboardUtility';
-import TeamModel from '../database/models/TeamModel';
-import MatchesModel from '../database/models/MatchModel';
+import SequelizeMatchesModel from '../database/models/SequelizeMatchesModel';
+import SequelizeTeamsModel from '../database/models/SequelizeTeamsModel';
 import ILeaderBoard from '../Interfaces/leaderboard/ILeaderBoard';
+import { getLeaderboardResults, orderResults } from '../utils/LeaderboardUtility';
 
 class LeaderboardService {
-  protected modelMatches = MatchesModel;
-  protected modelTeams = TeamModel;
+  protected sequelizeMatchesModel = SequelizeMatchesModel;
+  protected sequelizeTeamsModel = SequelizeTeamsModel;
 
   async getRankHome(): Promise<ILeaderBoard[]> {
     // Buscar todas as equipes
-    const teams = await this.modelTeams.findAll();
+    const teams = await this.sequelizeTeamsModel.findAll();
 
     // Buscar todas as partidas concluídas
-    const completedMatches = await this.modelMatches.findAll({ where: { inProgress: false } });
+    const completedMatches = await
+    this.sequelizeMatchesModel.findAll({ where: { inProgress: false } });
 
     // Array para armazenar os resultados da classificação
     const leaderBoardResults: ILeaderBoard[] = [];
@@ -38,9 +39,10 @@ class LeaderboardService {
   }
 
   async getRankAway(): Promise<ILeaderBoard[]> {
-    const teams = await this.modelTeams.findAll();
+    const teams = await this.sequelizeTeamsModel.findAll();
 
-    const completedMatches = await this.modelMatches.findAll({ where: { inProgress: false } });
+    const completedMatches = await
+    this.sequelizeMatchesModel.findAll({ where: { inProgress: false } });
 
     const leaderBoardResults: ILeaderBoard[] = [];
 
